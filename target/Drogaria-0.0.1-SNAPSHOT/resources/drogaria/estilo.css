@@ -1,0 +1,71 @@
+@CHARSET "UTF-8";
+
+body {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	font-weight: normal;
+}
+
+#conteudoLogin{
+	background: ccc;
+}
+
+header {
+	padding: 5px;
+	height: 70px;
+	background-color: #11A6D4;
+	color: #fff;
+	box-shadow: 0px 2px 2px #ccc;
+}
+
+#menu{
+margin-bottom: 20px;
+}
+
+#conteudo {
+	padding: 0px 8px;
+}
+
+footer {
+	border-top: 1px solid #ccc;
+	padding: 5px 8px;
+	margin-top: 20px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+h1 {
+	font-size: 30px;
+	font-weight: 500;
+	padding: 0px;
+	margin: 0px;
+	margin-bottom: 15px;
+	color: #B5B5B5;
+}
+
+.campo{
+	width: 150px;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+    padding: 10px 30px !important;
+    font-size: 15px !important;
+    border: 1px solid #fff !important;
+}
+
+.ui-button:hover{
+	background-color: #11A6D4 !important;
+}
+
+.ui-stater-hover{
+background: #11A6D4 !important;
+}
+
+/*Data table*/
+.ui-datatable .ui-column-filter {
+    display: block !important;
+    margin: auto !important;
+    height: 10px !important;
+    width: 250px !important;
+}

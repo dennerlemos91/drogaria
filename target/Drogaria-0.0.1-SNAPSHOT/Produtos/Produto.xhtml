@@ -1,0 +1,194 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+	<f:metadata>
+		<f:viewAction action="#{produtoBean.carregarProdutos}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">Cadastro Produto</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1 style="font-size: 30px; color: #B5B5B5;">Produtos</h1>
+		<p:messages id="mensagem" />
+		<h:form id="frm">
+
+
+			<p:toolbar style="padding:6px; margin-top:30px;">
+
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Novo" actionListener="#{produtoBean.novo}"
+						icon="ui-icon-plus" oncomplete="PF('dialogo').show()"
+						update=":mensagemDialogo :frmCadastro:painel" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h3>Lista de Produtos</h3>
+
+			<p:dataTable value="#{produtoBean.produtos}" var="produto"
+				id="tabelaProduto" emptyMessage="Nenhum Resgistro Encontrado"
+				style="text-align:center">
+
+				<p:column headerText="Código" style="width:40px;">
+
+					<p:outputLabel value="#{produto.id}" />
+
+				</p:column>
+
+				<p:column headerText="Produto">
+
+					<p:outputLabel value="#{produto.descricao}" />
+
+				</p:column>
+
+				<p:column headerText="Fabricante">
+
+					<p:outputLabel value="#{produto.fabricante.descricao}" />
+
+				</p:column>
+
+				<p:column headerText="Categoria">
+
+					<p:outputLabel value="#{produto.categoria.descricao}" />
+
+				</p:column>
+
+
+				<p:column headerText="Tipo">
+
+					<p:outputLabel value="#{produto.tipoProduto.descricao}" />
+
+				</p:column>
+
+				<p:column headerText="Formula">
+
+					<p:outputLabel value="#{produto.formula.descricao}" />
+
+				</p:column>
+
+				<p:column headerText="Quantidade">
+
+					<p:outputLabel value="#{produto.quantidade}" />
+
+				</p:column>
+
+				<p:column headerText="Valor">
+
+					<p:outputLabel value="#{produto.valor}">
+						<f:convertNumber currencySymbol="R$" locale="pt_BR"
+							minFractionDigits="2" type="currency" />
+					</p:outputLabel>
+
+				</p:column>
+
+				<p:column headerText="Data de Validade">
+					<p:outputLabel value="#{produto.dataValidade}">
+						<f:convertDateTime  pattern="dd/MM/yyyy" />
+					</p:outputLabel>
+				</p:column>
+
+
+
+				<p:column headerText="Opções">
+					<p:commandButton icon="ui-icon-pencil"
+						actionListener="#{produtoBean.alterar}"
+						oncomplete="PF('dialogo').show()" update=":frmCadastro:painel">
+						<f:attribute name="produtoSelecionado" value="#{produto}" />
+					</p:commandButton>
+					<p:commandButton icon="ui-icon-trash"
+						actionListener="#{produtoBean.excluir}"
+						update=":mensagem :frm:tabelaProduto">
+						<p:confirm header="Confirmação"
+							message="Deseja excluir o fabricante #{produto.descricao} ?" />
+						<f:attribute name="produtoSelecionado" value="#{produto}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<!-- Dialogo de Cadastro -->
+		<p:dialog widgetVar="dialogo" header="Novo Produto" closable="false"
+			modal="true" resizable="false">
+			<p:messages id="mensagemDialogo" />
+			<h:form id="frmCadastro">
+				<h:panelGrid columns="2"
+					style="margin-top: 20px; margin-bottom: 30px" id="painel">
+
+					<p:outputLabel value="Produto:" for="produto" />
+					<p:inputText id="produto" size="50"
+						value="#{produtoBean.produto.descricao}" required="true" />
+
+					<p:outputLabel value="Fabricante" for="fkfabricante" />
+					<p:selectOneMenu value="#{produtoBean.produto.fabricante}"
+						id="fkfabricante" required="true">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems value="#{produtoBean.fabricanteSelecionado}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Categoria" for="categoria" />
+					<p:selectOneMenu id="categoria"
+						value="#{produtoBean.produto.categoria}" required="true">
+						<f:selectItem itemLabel="Selecione uma categoria" />
+						<f:selectItems var="categoria"
+							value="#{produtoBean.categoriaProduto}" itemValue="#{categoria}"
+							itemLabel="#{categoria.descricao}"/>
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Tipo:" for="tipo" />
+					<p:selectOneMenu id="tipo"
+						value="#{produtoBean.produto.tipoProduto}" required="true">
+						<f:selectItem itemLabel="Selecione um tipo" />
+						<f:selectItems var="tipo" value="#{produtoBean.tipoProdutos}"
+							itemValue="#{tipo}" itemLabel="#{tipo.descricao}"
+							converter="conversorGenerico" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Formula:" for="formula" />
+					<p:selectOneMenu id="formula"
+						value="#{produtoBean.produto.formula}" required="true">
+						<f:selectItem itemLabel="Selecione uma formula"
+							noSelectionOption="true" />
+						<f:selectItems var="formula" value="#{produtoBean.fomulaProduto}"
+							itemValue="#{formula}" itemLabel="#{formula.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="quantidade" value="Quantidade:" />
+					<p:inputText id="quantidade" required="true"
+						value="#{produtoBean.produto.quantidade}" size="5" />
+
+
+
+					<p:outputLabel for="valor" value="Valor Unitário:" />
+					<p:inputText id="valor" value="#{produtoBean.produto.valor}"
+						required="true">
+						<f:convertNumber minFractionDigits="2" locale="pt_BR" />
+					</p:inputText>
+
+					<p:outputLabel for="data" value="Data de Validade:" />
+					<p:calendar id="data" pattern="dd/MM/yyyy"
+						value="#{produtoBean.produto.dataValidade}" required="true" />
+				</h:panelGrid>
+				<p:separator />
+
+				<center>
+					<p:commandButton value="
+							Salvar"
+						actionListener="#{produtoBean.salvar}"
+						update=":frm:tabelaProduto :mensagemDialogo :frmCadastro:painel " />
+					<p:commandButton value="Fechar" oncomplete="PF('dialogo').hide()" />
+				</center>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+
+</ui:composition>

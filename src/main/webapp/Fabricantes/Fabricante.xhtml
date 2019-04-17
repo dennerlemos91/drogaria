@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+	<f:metadata>
+		<f:viewAction action="#{fabricanteBean.carregarFabricantes}"></f:viewAction>
+	</f:metadata>
+
+
+	<ui:define name="titulo">Fabricante</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Fabricante</h1>
+		<h:form id="frmFabricantes">
+			<p:toolbar>
+				<p:toolbarGroup align="right">
+					<p:commandButton actionListener="#{fabricanteBean.novo}"
+						value="Novo" oncomplete="PF('dialogoFabricante').show()"
+						update=":frmCadastro:gridCadastro :frmCadastro:mensagemDialogo :frmFabricantes:mensagem"
+						process="@this" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<h2>Lista de Fabricantes</h2>
+
+			<p:messages id="mensagem" />
+
+			<p:dataTable var="fabricante"
+				value="#{fabricanteBean.todosfabricantes}" id="tabelaFabricantes"
+				style="text-align:center;" rows="13" paginator="true"
+				paginatorPosition="bottom" paginatorAlwaysVisible="false">
+				
+				<p:column headerText="Código">
+					<p:outputLabel value="#{fabricante.id}" />
+				</p:column>
+				<p:column headerText="Descrição">
+					<p:outputLabel value="#{fabricante.descricao}" />
+				</p:column>
+				<p:column headerText="Opções">
+					<p:commandButton update=":frmCadastro:gridCadastro" value="Alterar"
+						actionListener="#{fabricanteBean.editar}"
+						oncomplete="PF('dialogoFabricante').show()">
+						<f:attribute name="fabricanteSelecionado" value="#{fabricante}" />
+					</p:commandButton>
+
+					<p:commandButton process="@this" value="Excluir"
+						actionListener="#{fabricanteBean.excluir}"
+						update=":frmFabricantes:tabelaFabricantes :frmFabricantes:mensagem">
+						<p:confirm header="Confirmação"
+							message="Deseja excluir o fabricante #{fabricante.descricao}" />
+						<f:attribute name="fabricanteSelecionado" value="#{fabricante}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true" >
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<p:dialog widgetVar="dialogoFabricante" header="Novo Fabricante"
+			modal="true">
+			<h:form id="frmCadastro">
+				<p:messages id="mensagemDialogo" autoUpdate="true" />
+				<h:panelGrid columns="2" style="margin-bottom:15px;"
+					id="gridCadastro">
+					<p:outputLabel value="Descrição:" for="descricao" />
+					<p:inputText id="descricao"
+						value="#{fabricanteBean.fabricante.descricao}" size="30"
+						required="true" />
+					<p:outputLabel value="" />
+				</h:panelGrid>
+				<center>
+					<p:commandButton value="Salvar"
+						update=" :frmFabricantes:tabelaFabricantes :frmCadastro:gridCadastro  :frmCadastro:mensagemDialogo "
+						actionListener="#{fabricanteBean.salvar}" />
+					<p:commandButton value="Fechar"
+						oncomplete="PF('dialogoFabricante').hide()"
+						update=":frmCadastro:mensagemDialogo :frmCadastro:gridCadastro">
+						<f:actionListener
+							type="org.omnifaces.eventlistener.ResetInputAjaxActionListener" />
+					</p:commandButton>
+				</center>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/template/template.xhtml">
+
+	<f:metadata>
+		<f:viewAction action="#{funcionarioBean.carregarFuncionarios}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">Teste</ui:define>
+
+	<ui:define name="corpo">
+
+		<h1>Funcionario</h1>
+		<h:form id="formListagem">
+			<p:messages id="mensagem" />
+			<p:toolbar>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Novo" icon="ui-icon-plus"
+					update=":frmDialogo:mensagemDialogo :frmDialogo:gridCadastro"
+						actionListener="#{funcionarioBean.novo}"
+						oncomplete="PF('dialogoCadastro').show()"  />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+
+			<h3>Lista de Funcionarios</h3>
+
+			<p:dataTable style="text-align:center; font-size:13px;" var="funcionario"
+				value="#{funcionarioBean.funcionarios}" id="tabela">
+				<p:column headerText="Código" style="width:150px;">
+					<p:outputLabel value="#{funcionario.id}" />
+				</p:column>
+
+				<p:column headerText="Nome">
+					<p:outputLabel value="#{funcionario.nome}" />
+				</p:column>
+
+				<p:column headerText="Sexo" style="width:150px;">
+					<p:outputLabel value="#{funcionario.sexo}" />
+				</p:column>
+
+				<p:column headerText="Endereço">
+					<p:outputLabel value="#{funcionario.endereco} - #{funcionario.bairro} - #{funcionario.cidade}/#{funcionario.estado}" />
+				</p:column>
+
+							
+				<p:column headerText="Opções">
+					<p:commandButton process="@this" value="Alterar"
+						actionListener="#{funcionarioBean.alterar}"
+						oncomplete="PF('dialogoCadastro').show()"
+						update=":frmDialogo:gridCadastro">
+						<f:attribute name="produtoSelecionado" value="#{funcionario}" />
+					</p:commandButton>
+
+					<p:commandButton value="Excluir"
+						update=":formListagem:mensagem :formListagem:tabela"
+						actionListener="#{funcionarioBean.excluir}">
+						<p:confirm header="Confirmação"
+							message="Deseja excluir o funcionario #{funcionario.nome}" />
+						<f:attribute name="produtoSelecionado" value="#{funcionario}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog global="true">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</h:form>
+
+		<p:dialog widgetVar="dialogoCadastro" header="Novo Funcionário">
+			<h:form id="frmDialogo">
+				<p:messages id="mensagemDialogo" />
+				<h:panelGrid columns="2" id="gridCadastro">
+					<p:outputLabel value="Nome:" for="nome" />
+					<p:inputText id="nome" size="35"
+						value="#{funcionarioBean.funcionario.nome}" />
+
+					<p:outputLabel value="CPF:" for="cpf" />
+					<p:inputMask mask="999.999.999-99" id="cpf"
+						value="#{funcionarioBean.funcionario.cpf}" />
+
+					<p:outputLabel value="RG:" for="rg" />
+					<p:inputText id="rg" value="#{funcionarioBean.funcionario.rg}" />
+
+					<p:outputLabel value="Sexo:" />
+					<p:selectOneRadio value="#{funcionarioBean.funcionario.sexo}">
+						<f:selectItem  itemLabel="Masculino" itemValue="MASCULINO" />
+						<f:selectItem itemLabel="Feminino" itemValue="FEMININO" />
+					</p:selectOneRadio>
+
+					<p:outputLabel value="Endereço:" for="endereco" />
+					<p:inputText id="endereco"
+						value="#{funcionarioBean.funcionario.endereco}" />
+
+					<p:outputLabel value="Estado:" for="estado" />
+					<p:inputText id="estado"
+						value="#{funcionarioBean.funcionario.estado}" />
+
+					<p:outputLabel value="Cidade:" for="cidade" />
+					<p:inputText id="cidade"
+						value="#{funcionarioBean.funcionario.cidade}" />
+
+					<p:outputLabel value="Bairro:" for="bairro" />
+					<p:inputText id="bairro"
+						value="#{funcionarioBean.funcionario.bairro}" />
+
+					</h:panelGrid>
+				<p:separator style="margin-top:8px;" />
+				<center>
+					<p:commandButton value="Salvar"
+						update=":formListagem:tabela :frmDialogo:mensagemDialogo :frmDialogo:gridCadastro"
+						actionListener="#{funcionarioBean.Salvar}" />
+					<p:commandButton value="Fechar"
+						oncomplete="PF('dialogoCadastro').hide()" />
+				</center>
+			</h:form>
+		</p:dialog>
+
+
+
+	</ui:define>
+
+</ui:composition>
